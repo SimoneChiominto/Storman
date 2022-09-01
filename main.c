@@ -9,9 +9,12 @@
 int main()
 {
 
-  static void *a,*b;
-  block_alloc(&a,2*sizeof(void *),404*sizeof(void));
+  static void *a,*b,*c;
+  block_alloc(&a,2*sizeof(void *),32*sizeof(void));
   print_storman();
-  pointer_assign(&b,a);
+  block_alloc(&b,2*sizeof(void *),32*sizeof(void));
+  //pointer_assign(&b,a);
   print_storman();
+block_alloc(&c,2*sizeof(void *),32*sizeof(void));
+print_storman();
 }

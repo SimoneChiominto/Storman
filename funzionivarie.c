@@ -30,11 +30,11 @@ void zone_alloc(size_t size, struct zone **zone_listhead){
    * Alloca il doppio di size e inserisce nella struttura dati la nuova zona e il nuovo blocco
    */
   
-  new_zone->placement = malloc( 2*size );
+  new_zone->value = malloc( 2*size );
   new_zone->tot_mem =2*size;
   new_zone->block_listhead= NULL;
   insert(*zone_listhead,new_zone);
-  new_block->placement= new_zone->placement;
+  new_block->value= new_zone->value;
   new_block->tot_mem= new_zone->tot_mem;
   new_block->alignment=1;
   new_block->ptr_listhead = NULL;
@@ -57,18 +57,18 @@ void clean_zone( struct block *head)
   }
 }
 
-
+/*
 void block_list_insert(struct block **L, struct block *x)
 {
   
-  /*
-   * Inserisce mantenendo l'ordine crescente per il valore di placement
-   */
+  *
+   * Inserisce mantenendo l'ordine crescente per il valore di value
+   *
   
   if(!*L){
     *L=x;
   }
-  else if((*L)->placement > x->placement){
+  else if((*L)->value > x->value){
     x->next=*L;
     *L=x;
   }
@@ -76,6 +76,7 @@ void block_list_insert(struct block **L, struct block *x)
     block_list_insert(&((*L)->next),x);
   }  
 }
+*/
 
 /*
 void block_list_delete(struct block **L,struct block *x)//ok
@@ -93,7 +94,7 @@ void block_print_list(struct block *L)
 {
   while(L)
     {
-      printf("%p\n",L->placement);
+      printf("%p\n",L->value);
       L=L->next;
     }
   printf("\n");
@@ -175,7 +176,7 @@ int lookfor_block( void *val, struct zone **curr_zone, struct block **curr_block
     
     for(*curr_block=(*curr_zone)->block_listhead; *curr_block; *curr_block= (*curr_block)->next){//blocco per blocco
       
-      if( (*curr_block)->ptr_listhead && val >= (*curr_block)->placement  &&  val < ((*curr_block)->placement +(*curr_block)->tot_mem)){
+      if( (*curr_block)->ptr_listhead && val >= (*curr_block)->value  &&  val < ((*curr_block)->value +(*curr_block)->tot_mem)){
 	return 1;
       }
     }
@@ -196,11 +197,11 @@ void print_storman()
   //curr_zone=head;
   while( curr_zone)
     {
-      printf("\nsiamo nella zona %p\n",curr_zone->placement);
+      printf("\nsiamo nella zona %p\n",curr_zone->value);
       curr_block=curr_zone->block_listhead;
       while(curr_block)
 	{
-	  printf("\n%p",curr_block->placement);
+	  printf("\n%p",curr_block->value);
 	  if(curr_block->ptr_listhead)
 	    {
 	      printf(" con i puntatori ");

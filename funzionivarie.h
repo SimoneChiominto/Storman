@@ -4,7 +4,7 @@ struct zone{
   /*
    * Le zone sono gestite come liste
    */
-  void *placement; //l'indirizzo dell'inizio della zona
+  void *value; //l'indirizzo dell'inizio della zona
   size_t tot_mem;  //la memoria totale
   struct block *block_listhead; //puntatore all'inizio della lista dei blocchi della zona
   struct zone *next;
@@ -23,7 +23,7 @@ struct block{
    * I blocchi sono gestiti come liste
    */
   
-  void *placement; //l'indirizzo dell'inizio del blocco
+  void *value; //l'indirizzo dell'inizio del blocco
   size_t tot_mem;  //la memoria totale
   size_t alignment;//allineamento
   struct list_blockPtr *ptr_listhead; //puntatore all'inizio della lista dei blocchi della zona, se NULL allora è un blocco libero

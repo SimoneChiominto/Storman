@@ -81,27 +81,27 @@ int block_alloc(void ** ptr_addr, size_t alignment, size_t size)
       
       //prec_block
       //se non lascia spazio bianco allora non c'è altrimenti lo creo
-      if(block_ptr==freeBlock->placement)//se non c'è spazio prima
+      if(block_ptr==freeBlock->value)//se non c'è spazio prima
 	prec_block=NULL;
       else{
-	prec_block->placement = freeBlock->placement;
-	prec_block->tot_mem = ( block_ptr - prec_block->placement);
+	prec_block->value = freeBlock->value;
+	prec_block->tot_mem = ( block_ptr - prec_block->value);
 	prec_block->alignment=1;
 	prec_block->ptr_listhead=NULL;	
       }
       
       //new_block
-      new_block->placement = block_ptr;
+      new_block->value = block_ptr;
       new_block->tot_mem = size;
       new_block->alignment= alignment;
       new_block->ptr_listhead=NULL;
       
       //succ_block
-      if((block_ptr - freeBlock->placement)+size == freeBlock->tot_mem )//se non c'è spazio dopo
+      if((block_ptr - freeBlock->value)+size == freeBlock->tot_mem )//se non c'è spazio dopo
 	succ_block=NULL;
       else{
-	succ_block->placement = block_ptr+size;
-	succ_block->tot_mem = freeBlock->placement + freeBlock->tot_mem - succ_block->placement;
+	succ_block->value = block_ptr+size;
+	succ_block->tot_mem = freeBlock->value + freeBlock->tot_mem - succ_block->value;
 	succ_block->alignment=1;
 	succ_block->ptr_listhead=NULL;
       }
@@ -126,10 +126,10 @@ int block_alloc(void ** ptr_addr, size_t alignment, size_t size)
       delete( curr_zone->block_listhead, freeBlock );
       //se esistono
       if(prec_block)
-	insert( curr_zone->block_listhead, prec_block );
-      insert( curr_zone->block_listhead, new_block );
+	sorted_insert( curr_zone->block_listhead, prec_block );
+      sorted_insert( curr_zone->block_listhead, new_block );
       if(succ_block)
-	insert( curr_zone->block_listhead, succ_block );
+	sorted_insert( curr_zone->block_listhead, succ_block );
       //}
   }
  
@@ -177,9 +177,9 @@ int found_freeBlock(struct zone **curr_zone,struct block **curr_block, size_t al
     for( *curr_block=(*curr_zone)->block_listhead; *curr_block; *curr_block=(*curr_block)->next){
       if(! (*curr_block)->ptr_listhead){ 
 	int i=0;//mi indicherà quanto spazio devo lasciare per ripettare l'alignment
-	//while( (((unsigned long)(*curr_block)->placement) + i) %alignment){
+	//while( (((unsigned long)(*curr_block)->value) + i) %alignment){
 	int resto;
-	if(( resto= ((unsigned long) (*curr_block)->placement) % alignment) ){
+	if(( resto= ((unsigned long) (*curr_block)->value) % alignment) ){
 	    i= alignment - resto;	  
 	  //	  i++;
 	}
@@ -204,7 +204,7 @@ void *rightSpace(struct block *curr_block, size_t alignment){
    * é la funzione che mi calcola quanto spazio libero devo lasciare per rispettare l'alignment
    * e mi ritorna il punto della memoria esatto da assegnare a *ptr_addr
    */
-  unsigned long ptr= (unsigned long) curr_block->placement;
+  unsigned long ptr= (unsigned long) curr_block->value;
   //int i=0;
   int resto;
   if (( resto = ptr %alignment)){
