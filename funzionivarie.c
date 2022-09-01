@@ -1,6 +1,8 @@
 #include "funzionivarie.h"
 #include <stdio.h>
+#include "lists.h"
 
+/*
 void zone_list_insert(struct zone **L, struct zone *x)//ok
 {
   if (x)
@@ -19,7 +21,7 @@ void zone_list_delete(struct zone **L,struct zone *x)//ok
     zone_list_delete( &((*L)->next),x);
 }
 
-
+*/
 void zone_alloc(size_t size, struct zone **zone_listhead){
   struct zone *new_zone=malloc(sizeof(struct zone));
   struct block *new_block=malloc(sizeof(struct block));//blocco che contiene tutta la zona
@@ -31,12 +33,12 @@ void zone_alloc(size_t size, struct zone **zone_listhead){
   new_zone->placement = malloc( 2*size );
   new_zone->tot_mem =2*size;
   new_zone->block_listhead= NULL;
-  zone_list_insert(zone_listhead,new_zone);
+  insert(*zone_listhead,new_zone);
   new_block->placement= new_zone->placement;
   new_block->tot_mem= new_zone->tot_mem;
   new_block->alignment=1;
   new_block->ptr_listhead = NULL;
-  block_list_insert( &(new_zone->block_listhead), new_block );
+  insert( new_zone->block_listhead, new_block );
 }
 
 void clean_zone( struct block *head)
@@ -50,10 +52,11 @@ void clean_zone( struct block *head)
   for(curr_block= head ; curr_block ; curr_block=curr_block->next){
     while( curr_block->next && !curr_block->ptr_listhead && !curr_block->next->ptr_listhead ){//se due blocchi consecutivi sono liberi
       curr_block->tot_mem += curr_block->next->tot_mem;
-      block_list_delete(&curr_block,curr_block->next);
+      delete(curr_block,curr_block->next);
     }
   }
 }
+
 
 void block_list_insert(struct block **L, struct block *x)
 {
@@ -74,7 +77,7 @@ void block_list_insert(struct block **L, struct block *x)
   }  
 }
 
-
+/*
 void block_list_delete(struct block **L,struct block *x)//ok
 {
   if (x==*L){
@@ -84,6 +87,7 @@ void block_list_delete(struct block **L,struct block *x)//ok
   else    
     block_list_delete( &((*L)->next),x);   
 }
+*/
 
 void block_print_list(struct block *L)
 {
@@ -94,15 +98,16 @@ void block_print_list(struct block *L)
     }
   printf("\n");
 }
-
+/*
 void ptr_list_insert(struct list_blockPtr **L, struct list_blockPtr *x)
 {
   if (x)
     x->next=*L;
   *L=x;
 }
+*/
 
-
+/*
 void ptr_list_delete(struct list_blockPtr **L,struct list_blockPtr *x)
 {
   if (x==*L){
@@ -112,7 +117,7 @@ void ptr_list_delete(struct list_blockPtr **L,struct list_blockPtr *x)
   else    
     ptr_list_delete( &((*L)->next),x);   
 }
-
+*/
 
 int lookfor( void **ptr, struct zone **curr_zone, struct block **curr_block, struct list_blockPtr **curr_ptr )
 {

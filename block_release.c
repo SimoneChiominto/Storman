@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "funzionivarie.h"
-
+#include "lists.h"
 
 int block_release(void ** ptr_addr){
 
@@ -24,7 +24,7 @@ int block_release(void ** ptr_addr){
     /*
      * Se trovo il puntatore lo rilascio
      */
-    ptr_list_delete( &(curr_block->ptr_listhead), curr_ptr );
+    delete( curr_block->ptr_listhead, curr_ptr );
     *ptr_addr=NULL;
     
     /*
@@ -51,7 +51,7 @@ int block_release(void ** ptr_addr){
       /*
        * Se la zona è composta da un solo blocco libero, dealloco l'intera zona
        */
-      zone_list_delete(&zone_listhead,curr_zone);
+      delete(zone_listhead,curr_zone);
     }
   }
   return 0;

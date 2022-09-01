@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "funzionivarie.h"
 #include "storman.h"
+#include "lists.h"
 
 int isAccettable(size_t n);
 int found_freeBlock(struct zone **curr_zone,struct block **curr_block, size_t alignment,size_t size) ;
@@ -15,7 +16,6 @@ struct zone *zone_listhead=NULL;
 int block_alloc(void ** ptr_addr, size_t alignment, size_t size)
 {
 
-;
   /*
    * Errore, alignement non ripetta il vincolo
    */
@@ -116,20 +116,20 @@ int block_alloc(void ** ptr_addr, size_t alignment, size_t size)
       struct list_blockPtr *new_blockPtr=malloc(sizeof(struct list_blockPtr));
       new_blockPtr->ptr = block_ptr;
       new_blockPtr->ptrptr = ptr_addr;
-      ptr_list_insert( &(new_block->ptr_listhead), new_blockPtr);
+      insert( new_block->ptr_listhead, new_blockPtr);
 
       
       
       /*
        * Infine inserisco i blocchi nella lista ordinata dei blocchi della zona
        */
-      block_list_delete( &(curr_zone->block_listhead), freeBlock );
+      delete( curr_zone->block_listhead, freeBlock );
       //se esistono
       if(prec_block)
-	block_list_insert(&( curr_zone->block_listhead), prec_block );
-      block_list_insert( &(curr_zone->block_listhead), new_block );
+	insert( curr_zone->block_listhead, prec_block );
+      insert( curr_zone->block_listhead, new_block );
       if(succ_block)
-	block_list_insert( &(curr_zone->block_listhead), succ_block );
+	insert( curr_zone->block_listhead, succ_block );
       //}
   }
  
