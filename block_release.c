@@ -15,7 +15,7 @@ int block_release(void ** ptr_addr){
    * Cerco il blocco e il puntatore da rilasciare,
    * se non lo trovo allora return 2
    */
-  if(!lookfor(ptr_addr,&curr_zone,&curr_block, &curr_ptr))
+  if(!search(ptr_addr,&curr_zone,&curr_block, &curr_ptr))
     return 2;
 
   

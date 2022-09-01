@@ -2,26 +2,7 @@
 #include <stdio.h>
 #include "lists.h"
 
-/*
-void zone_list_insert(struct zone **L, struct zone *x)//ok
-{
-  if (x)
-    x->next=*L;
-  *L=x;
-}
 
-
-void zone_list_delete(struct zone **L,struct zone *x)//ok
-{
-  if (x==*L){
-    *L=x->next;
-    free(x);
-  }
-  else    
-    zone_list_delete( &((*L)->next),x);
-}
-
-*/
 void zone_alloc(size_t size, struct zone **zone_listhead){
   struct zone *new_zone=malloc(sizeof(struct zone));
   struct block *new_block=malloc(sizeof(struct block));//blocco che contiene tutta la zona
@@ -41,6 +22,7 @@ void zone_alloc(size_t size, struct zone **zone_listhead){
   insert( new_zone->block_listhead, new_block );
 }
 
+
 void clean_zone( struct block *head)
 {
   
@@ -57,38 +39,6 @@ void clean_zone( struct block *head)
   }
 }
 
-/*
-void block_list_insert(struct block **L, struct block *x)
-{
-  
-  *
-   * Inserisce mantenendo l'ordine crescente per il valore di value
-   *
-  
-  if(!*L){
-    *L=x;
-  }
-  else if((*L)->value > x->value){
-    x->next=*L;
-    *L=x;
-  }
-  else{
-    block_list_insert(&((*L)->next),x);
-  }  
-}
-*/
-
-/*
-void block_list_delete(struct block **L,struct block *x)//ok
-{
-  if (x==*L){
-    *L=x->next;
-    free (x);
-  }
-  else    
-    block_list_delete( &((*L)->next),x);   
-}
-*/
 
 void block_print_list(struct block *L)
 {
@@ -99,28 +49,10 @@ void block_print_list(struct block *L)
     }
   printf("\n");
 }
-/*
-void ptr_list_insert(struct list_blockPtr **L, struct list_blockPtr *x)
-{
-  if (x)
-    x->next=*L;
-  *L=x;
-}
-*/
 
-/*
-void ptr_list_delete(struct list_blockPtr **L,struct list_blockPtr *x)
-{
-  if (x==*L){
-    *L=x->next;
-    free(x);
-  }
-  else    
-    ptr_list_delete( &((*L)->next),x);   
-}
-*/
 
-int lookfor( void **ptr, struct zone **curr_zone, struct block **curr_block, struct list_blockPtr **curr_ptr )
+
+int search( void **ptr, struct zone **curr_zone, struct block **curr_block, struct list_blockPtr **curr_ptr )
 {
   
   /*
@@ -157,7 +89,8 @@ int lookfor( void **ptr, struct zone **curr_zone, struct block **curr_block, str
   return 0;
 }
 
-int lookfor_block( void *val, struct zone **curr_zone, struct block **curr_block){
+
+int search_block( void *val, struct zone **curr_zone, struct block **curr_block){
 
   /*
    * Simile a lookfor, ma trova solamente se val ricade nell'intervallo di un blocco
@@ -184,6 +117,9 @@ int lookfor_block( void *val, struct zone **curr_zone, struct block **curr_block
   return 0;
 }
 
+
+
+
 void print_storman()
 {
   /*
@@ -197,7 +133,7 @@ void print_storman()
   //curr_zone=head;
   while( curr_zone)
     {
-      printf("\nsiamo nella zona %p\n",curr_zone->value);
+      printf("\n\nsiamo nella zona %p\n",curr_zone->value);
       curr_block=curr_zone->block_listhead;
       while(curr_block)
 	{

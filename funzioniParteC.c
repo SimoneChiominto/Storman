@@ -54,7 +54,7 @@ struct list_ptr_queue block_enqueue( struct list_ptr_queue C, struct block *B){
       for( curr_ptr=curr_block->ptr_listhead; curr_ptr; curr_ptr=curr_ptr->next){//puntatore per puntatore
 
 	struct block *block_found=NULL;
-	lookfor_block(curr_ptr->ptrptr,NULL,&block_found);
+	search_block(curr_ptr->ptrptr,NULL,&block_found);
 	if(B==block_found){
 	  C=ptr_enqueue(C,curr_ptr);
 	}
@@ -158,7 +158,7 @@ void write_graph( struct block_graph *g, int n)//da testare
     curr_ptr=g[i].block->ptr_listhead; 
     while(curr_ptr){
       struct block *block_found=malloc(sizeof(struct block));
-      if(lookfor_block(curr_ptr->ptrptr,NULL,&block_found)){
+      if(search_block(curr_ptr->ptrptr,NULL,&block_found)){
 	//trovo l'indice corrispondente a block found
 	int k=0;
 	if(block_found!=g[k].block){	  

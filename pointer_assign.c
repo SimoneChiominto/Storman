@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "funzionivarie.h"
 #include "storman.h"
+#include "lists.h"
 
 
 int pointer_assign(void ** ptr_addr, void * val){
@@ -14,7 +15,7 @@ int pointer_assign(void ** ptr_addr, void * val){
    * che inoltre mi porta curr_zone e curr_block nella zona e nel blocco desiderato
    */
   
-  if(lookfor_block(val,&curr_zone,&curr_block))  //val è un indirizzo di un blocco gestito da storman
+  if(search_block(val,&curr_zone,&curr_block))  //val è un indirizzo di un blocco gestito da storman
     {
       //da adesso in poi non ci spostiamo più dalla zona  e dal blocco di val
 
@@ -31,8 +32,8 @@ int pointer_assign(void ** ptr_addr, void * val){
 	 * se *ptr_addr è un indirizzo gestito da storman allora lo rilascio per poi riassegnarlo
 	 */
 	
-	if(lookfor(ptr_addr,NULL,NULL,NULL) && val!=*ptr_addr) {
-	  block_release(ptr_addr);
+	if(search(ptr_addr,NULL,NULL,NULL) && val!=*ptr_addr) {
+	  block_release(ptr_addr); //forse pointer_release??
 	}
 	
 	/*
@@ -44,7 +45,7 @@ int pointer_assign(void ** ptr_addr, void * val){
 	struct list_blockPtr *new_ptr=malloc(sizeof(struct list_blockPtr));
 	new_ptr->ptr=*ptr_addr;
 	new_ptr->ptrptr=ptr_addr;
-	ptr_list_insert(&(curr_block->ptr_listhead), new_ptr);
+	insert(curr_block->ptr_listhead, new_ptr);
 	return 0;
       }
     }

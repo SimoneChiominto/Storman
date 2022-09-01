@@ -32,7 +32,7 @@ int block_alloc(void ** ptr_addr, size_t alignment, size_t size)
      * per poi riassegnargli un blocco-
      */
 
-    if(lookfor(ptr_addr, &curr_zone, NULL, NULL)){//se *ptr_addr è gestito da storman lo levo temporaneamente per assegnargli poi un nuovo blocco
+    if(search(ptr_addr, &curr_zone, NULL, NULL)){//se *ptr_addr è gestito da storman lo levo temporaneamente per assegnargli poi un nuovo blocco
        block_release(ptr_addr);
        //return block_alloc(ptr_addr, alignment, size);
     }

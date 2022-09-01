@@ -21,7 +21,7 @@ int ext_block_release(void ** ptr_addr, int * num_released)
   struct block *curr_block=malloc(sizeof(struct block));
   struct list_blockPtr *curr_ptr=malloc(sizeof(struct list_blockPtr));
 
-  if(!lookfor(ptr_addr,NULL,NULL,&curr_ptr)) return 1;
+  if(!search(ptr_addr,NULL,NULL,&curr_ptr)) return 1;
 
   struct list_ptr_queue C;
   C.head=NULL;
@@ -39,7 +39,7 @@ int ext_block_release(void ** ptr_addr, int * num_released)
 
   while(C.head){  
     curr_ptr=ptr_dequeue(&C);
-    lookfor(curr_ptr->ptrptr,NULL,&curr_block,NULL); //controllare ptrptr
+    search(curr_ptr->ptrptr,NULL,&curr_block,NULL); //controllare ptrptr
     if( curr_block->ptr_listhead && !curr_block->ptr_listhead->next){//se è l'unico elemento del blocco     
       *num_released+=1;
       C=block_enqueue(C,curr_block);
@@ -57,7 +57,7 @@ int ext_block_release(void ** ptr_addr, int * num_released)
 
 
 int ext_block_alloc(void ** ptr_addr , size_t alignment , size_t size){
-  if(lookfor(ptr_addr, NULL, NULL, NULL)){
+  if(search(ptr_addr, NULL, NULL, NULL)){
     int n;
     ext_block_release(ptr_addr,&n);
      return block_alloc(ptr_addr,alignment,size);

@@ -12,8 +12,6 @@ struct zone{
 
 struct zone *zone_listhead;
 
-void zone_list_insert(struct zone **L, struct zone *x);
-void zone_list_delete(struct zone **L, struct zone *x);
 void zone_alloc(size_t size, struct zone **);
 void clean_zone( struct block *head);
 
@@ -30,8 +28,6 @@ struct block{
   struct block *next;
 };
 
-void block_list_insert(struct block **L, struct block *x);
-void block_list_delete(struct block **L, struct block *x);
 void block_print_list(struct block *L);
 
 struct list_blockPtr{
@@ -45,13 +41,10 @@ struct list_blockPtr{
   struct list_blockPtr *next;
 };
 
-void ptr_list_insert(struct list_blockPtr **L, struct list_blockPtr *x);
-void ptr_list_delete(struct list_blockPtr **L, struct list_blockPtr *x);
 
 //funzioni di ricerca
-int lookfor( void **ptr, struct zone **curr_zone, struct block **curr_block, struct list_blockPtr **curr_ptr );
-int lookfor_block( void *ptr, struct zone **curr_zone, struct block **curr_block);
-int count_storman_block();
+int search( void **ptr, struct zone **curr_zone, struct block **curr_block, struct list_blockPtr **curr_ptr );
+int search_block( void *ptr, struct zone **curr_zone, struct block **curr_block);
 void print_storman();
 
 

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "funzionivarie.h"
 #include "storman.h"
+#include "lists.h"
 
 
 
@@ -17,7 +18,7 @@ int pointer_release(void ** ptr_addr){
    * se ptr_addr non punta a un puntatore di storman non faccio niente e ritorno 1
    */
   
-  if(!lookfor(ptr_addr,&curr_zone,&curr_block,& curr_ptr))
+  if(!search(ptr_addr,&curr_zone,&curr_block,& curr_ptr))
     return 1;
 
   else{
@@ -38,7 +39,7 @@ int pointer_release(void ** ptr_addr){
        * se ci sono altri puntatori al blocco rilascio il puntatore
        */
 
-      ptr_list_delete( &(curr_block->ptr_listhead), curr_ptr );
+      delete(curr_block->ptr_listhead, curr_ptr );
       *ptr_addr=NULL;
       return 0;
     }    

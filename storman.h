@@ -12,8 +12,8 @@ int pointer_info(void ** ptr_addr, unsigned int *type);
 
 #define assign(__lv,__rv,__ret)					\
   do {								\
-    if (lookfor(&(__lv), NULL, NULL, NULL)) (__ret)=2;		\
-    else if(!lookfor_block(&(__lv),NULL,NULL)) (__ret)=1;	\
+    if (search(&(__lv), NULL, NULL, NULL)) (__ret)=2;		\
+    else if(!search_block(&(__lv),NULL,NULL)) (__ret)=1;	\
     else {							\
       (__ret)=0;						\
       (__lv)=(__rv);						\

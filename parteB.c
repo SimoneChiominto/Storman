@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "funzionivarie.h"
 #include "storman.h"
+#include "lists.h"
 
 //ok
 void *** block_info(void ** ptr_addr, void **lowaddr, void **highaddr, size_t * num_ptr){
@@ -10,15 +11,15 @@ void *** block_info(void ** ptr_addr, void **lowaddr, void **highaddr, size_t * 
    struct list_blockPtr *curr_ptr=malloc(sizeof(struct list_blockPtr));
 
   
-   if(!lookfor( ptr_addr, &curr_zone, &curr_block,NULL))//se non trovo il blocco allora non c'è nulla da fare
+   if(!search( ptr_addr, &curr_zone, &curr_block,NULL))//se non trovo il blocco allora non c'è nulla da fare
      return NULL;
    else{
 
      //sono arrivato in curr_block che è il blocco a cui sto puntando con lookfor
      //2) setto *lowaadr e *highadddr con gli indirizzi di partenza e fine di curr_block
      
-     *lowaddr = curr_block->placement;
-     *highaddr = (void *) ((unsigned long) curr_block->placement + (unsigned long) curr_block->tot_mem -1);
+     *lowaddr = curr_block->value;
+     *highaddr = (void *) ((unsigned long) curr_block->value + (unsigned long) curr_block->tot_mem -1);
 
      //accedo alla lista dei puntatori che puntano in curr_bock
      
@@ -58,7 +59,7 @@ void *** block_info(void ** ptr_addr, void **lowaddr, void **highaddr, size_t * 
 
 int pointer_info(void ** ptr_addr, unsigned int *type){
   
-  if(!lookfor( ptr_addr, NULL, NULL, NULL))
+  if(!search( ptr_addr, NULL, NULL, NULL))
     return 1;
 
   else{
@@ -67,7 +68,7 @@ int pointer_info(void ** ptr_addr, unsigned int *type){
      * se il puntatore al puntatore è in storman allora il tipo è dinamico
      */
     
-    if(lookfor_block( ptr_addr, NULL, NULL)) {
+    if(search_block( ptr_addr, NULL, NULL)) {
       *type=1; //dinamico = 1
     }
     else *type=0; //automatico o statico = 0
@@ -92,7 +93,7 @@ int ptrMoreThanSize( struct block *block, size_t size){
   
   struct list_blockPtr *curr_ptr=block->ptr_listhead;
   while( curr_ptr ){
-    if( curr_ptr->ptr - block->placement > size) return 1;
+    if( curr_ptr->ptr - block->value > size) return 1;
     curr_ptr= curr_ptr->next;
   }
   return 0;
@@ -104,13 +105,13 @@ int thereIsRightSpace(struct zone *curr_zone, struct block *curr_block, size_t s
    * Mi controlla se posso allargare il blocco a destra
    */
   
-  void *base_placement= curr_block->placement;
+  void *base_placement= curr_block->value;
 
   /*
    * se esco dalla zona
    */
   
-  if( (unsigned long) base_placement + size > (unsigned long) curr_zone->placement + curr_zone->tot_mem) return 0;
+  if( (unsigned long) base_placement + size > (unsigned long) curr_zone->value + curr_zone->tot_mem) return 0;
 
   //printf("\nse sono qui va bene");
   
@@ -119,7 +120,7 @@ int thereIsRightSpace(struct zone *curr_zone, struct block *curr_block, size_t s
    */
   
   struct block *block= curr_block->next;
-  while(block && block->placement - base_placement < size){   
+  while(block && block->value - base_placement < size){   
     if(block->ptr_listhead){
 
       /*
@@ -163,7 +164,7 @@ int block_realloc(void ** ptr_addr, size_t newsize){
   struct zone *curr_zone=malloc(sizeof(struct zone));
   struct block *curr_block=malloc(sizeof(struct block));
   //se non punta a un blocco allora errore
-  if(!lookfor( ptr_addr, &curr_zone, &curr_block, NULL))
+  if(!search( ptr_addr, &curr_zone, &curr_block, NULL))
     return 1;
 
   //se punta a un blocco gestito da storman
@@ -200,15 +201,15 @@ int block_realloc(void ** ptr_addr, size_t newsize){
 	size_t diff= curr_block->tot_mem - newsize;
 	curr_block->tot_mem = newsize;
 	if(curr_block->next && !curr_block->next->ptr_listhead){
-	  curr_block->next->placement = (void *)((unsigned long) curr_block->placement + newsize);
+	  curr_block->next->value = (void *)((unsigned long) curr_block->value + newsize);
 	  curr_block->next->tot_mem +=  diff;
 	}
 	else{
 	  struct block *new_block=malloc(sizeof(struct block));
-	  new_block->placement = (void *)((unsigned long) curr_block->placement + newsize);
+	  new_block->value = (void *)((unsigned long) curr_block->value + newsize);
 	  new_block->tot_mem= diff;
 	  new_block->alignment=1;
-	  block_list_insert( &(curr_zone->block_listhead), new_block);
+	  insert( curr_zone->block_listhead, new_block);
 	}
       }
     }
@@ -234,17 +235,17 @@ int block_realloc(void ** ptr_addr, size_t newsize){
 	 */
 	
 	struct block *succ_block=curr_block->next;
-	while(succ_block && succ_block->placement - curr_block->placement < newsize){//finchè sono in un blocco che devo eliminare o restringere
+	while(succ_block && succ_block->value - curr_block->value < newsize){//finchè sono in un blocco che devo eliminare o restringere
 	  //non è detto che esista succ_block->next nel caso sia l'ultimo blocco della zona, ma allora io gia so che non sto fuoriusceno dalla zona quindi è da restringere a meno che non sia esattamente tutto ricopetro	  
-	  if( (unsigned long) succ_block->placement + succ_block->tot_mem - (unsigned long) curr_block->placement <=  newsize ){//se il blocco successivo è anche da restringere o questo blocco è completamente da eliminare
+	  if( (unsigned long) succ_block->value + succ_block->tot_mem - (unsigned long) curr_block->value <=  newsize ){//se il blocco successivo è anche da restringere o questo blocco è completamente da eliminare
 	    struct block *succsucc_block=succ_block->next;
-	    block_list_delete( &(curr_zone->block_listhead), succ_block);	    	      
+	    delete( curr_zone->block_listhead, succ_block);	    	      
 	      succ_block=succsucc_block;
 	  }
 	  
 	  else{ //il blocco è solo da restringere
-	    succ_block->tot_mem = (unsigned long) succ_block->placement + succ_block->tot_mem - (unsigned long) curr_block->placement - newsize;
-	    succ_block->placement= (void *) ( (unsigned long) curr_block->placement + newsize );
+	    succ_block->tot_mem = (unsigned long) succ_block->value + succ_block->tot_mem - (unsigned long) curr_block->value - newsize;
+	    succ_block->value = (void *) ( (unsigned long) curr_block->value + newsize );
 	  }
 	}		
       }
@@ -259,13 +260,13 @@ int block_realloc(void ** ptr_addr, size_t newsize){
 
 	struct block *new_block=malloc(sizeof(struct block));
 	//size_t alignment = findAlignment((size_t) curr_block->placement);//prendo il più grande allinamento possibile di questo blocco
-	block_alloc( &(new_block->placement) , curr_block->alignment, newsize);
+	block_alloc( &(new_block->value) , curr_block->alignment, newsize);
 
 	/*
 	 * faccio una copia byte per byte dello storage
 	 */
 	
-	myMemCpy( curr_block->placement, new_block->placement, curr_block->tot_mem);
+	myMemCpy( curr_block->value, new_block->value, curr_block->tot_mem);
 
 	
 	//aggiorno puntatori
@@ -276,16 +277,16 @@ int block_realloc(void ** ptr_addr, size_t newsize){
 
 		
 	while(curr_block->ptr_listhead){
-	  pointer_assign(curr_ptr->ptrptr, new_block->placement + ( curr_ptr->ptr - curr_block->placement));
+	  pointer_assign(curr_ptr->ptrptr, new_block->value + ( curr_ptr->ptr - curr_block->value));
 	  
 	  if(curr_block)
 	    curr_ptr=curr_block->ptr_listhead;
 	}
 	
-	*ptr_addr += ( new_block->placement - curr_block->placement );
+	*ptr_addr += ( new_block->value - curr_block->value );
 
 	//devo levare il primo pointer allocato
-	pointer_release( &(new_block->placement));
+	pointer_release( &(new_block->value));
 
 
 	/*

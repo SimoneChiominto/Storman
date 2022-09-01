@@ -15,6 +15,9 @@ int main()
   block_alloc(&b,2*sizeof(void *),32*sizeof(void));
   //pointer_assign(&b,a);
   print_storman();
-block_alloc(&c,2*sizeof(void *),32*sizeof(void));
+	pointer_assign(&c,a);
+//block_alloc(&c,2*sizeof(void *),32*sizeof(void));
+print_storman();
+pointer_release(&c);
 print_storman();
 }
