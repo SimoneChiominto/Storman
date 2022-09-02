@@ -1,8 +1,8 @@
-#include "funzionivarie.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "storman.h"
-#include "funzioniParteC.h"
+#include "utils2.h"
 
 struct list_ptr_queue ptr_enqueue( struct list_ptr_queue C, struct list_blockPtr *curr_ptr){
 

@@ -1,8 +1,8 @@
 //block_alloc
-//SIIIIIIIIII FUNZIONAAAAAAAAAAAA YEEEEES ma fino a una certa
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "funzionivarie.h"
+#include "utils.h"
 #include "storman.h"
 #include "lists.h"
 

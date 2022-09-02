@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "storman.h"
-#include "funzionivarie.h"
+#include "utils.h"
+
 /*
  * In questo file mettere le prove per testare storman
  */
