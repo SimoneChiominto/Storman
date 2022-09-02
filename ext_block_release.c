@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "utils.h"
-#include "storman.h"
-#include "utils2.h"
+#include "headers/utils.h"
+#include "headers/storman.h"
+#include "headers/utils2.h"
 
 
 

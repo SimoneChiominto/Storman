@@ -2,9 +2,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "utils.h"
-#include "storman.h"
-#include "lists.h"
+#include "headers/utils.h"
+#include "headers/storman.h"
+#include "headers/lists.h"
 
 int isAccettable(size_t n);
 int found_freeBlock(struct zone **curr_zone,struct block **curr_block, size_t alignment,size_t size) ;

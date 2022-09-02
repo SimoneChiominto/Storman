@@ -1,6 +1,6 @@
-#include "utils.h"
+#include "../headers/utils.h"
 #include <stdio.h>
-#include "lists.h"
+#include "../headers/lists.h"
 
 
 void zone_alloc(size_t size, struct zone **zone_listhead){

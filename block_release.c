@@ -1,8 +1,8 @@
 //block_release
 #include <stdio.h>
 #include <stdlib.h>
-#include "utils.h"
-#include "lists.h"
+#include "headers/utils.h"
+#include "headers/lists.h"
 
 int block_release(void ** ptr_addr){
 
